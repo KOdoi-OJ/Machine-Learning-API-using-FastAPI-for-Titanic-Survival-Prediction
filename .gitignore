@@ -130,6 +130,5 @@ dmypy.json
 
 # Others
 .dockerignore
-.ipynb_checkpoints
 .vscode
 __pycache__
