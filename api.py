@@ -8,7 +8,7 @@ import pandas as pd
 
 # Define key variables
 toolkit_path = "LP6_toolkit"
-expected_inputs = ["Pclass", "Age", "SibSp", "Parch", "Fare", "Sex",, "Embarked"]
+expected_inputs = ["Pclass", "Age", "SibSp", "Parch", "Fare", "Sex", "Embarked"]
 categoricals = ["Sex", "Embarked"]
 columns_to_scale = ["Pclass", "Age", "SibSp", "Parch", "Fare"]
 
@@ -69,12 +69,12 @@ def make_prediction(Pclass, Age, SibSp, Parch, Fare, Sex_male, Embarked_Q, Embar
     # Scale the numeric columns
     df[columns_to_scale] = scaler.transform(df[columns_to_scale])
 
-    # Make the prediction
+    # Make the prediction and return output
     model_output = model.predict(df).tolist()
     return model_output
 
 # Endpoints
-@app.post("/Survival")
+@app.post("/survival")
 async def predict(input: ModelInput):
     output_pred = make_prediction(
         Pclass=input.Pclass,
@@ -91,16 +91,14 @@ async def predict(input: ModelInput):
     if output_pred == 0:
         output_pred = "This person is UNLIKELY to survive"
     else:
-        output_pred = "Positive. This person is likely to survive"
+        output_pred = "Positive. This person is LIKELY to survive"
     #return output_pred
-    return {
-        "prediction": output_pred,
-        "input": input
-    }
+    return {"prediction": output_pred,
+            "input": input
+            }
 
 # Set the API to run
 if __name__ == "__main__":
-    uvicorn.run(
-        "api:app",
-        reload=True,
-    )
+    uvicorn.run("api:app",
+                reload=True
+                )
